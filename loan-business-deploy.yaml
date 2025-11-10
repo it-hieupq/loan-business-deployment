@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loan-business
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: loan-business
+  template:
+    metadata:
+      labels:
+        app: loan-business
+    spec:
+      containers:
+        - name: loan-business
+          image: localhost:5000/loan-business:v1.0.0
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loan-business
+spec:
+  selector:
+    app: loan-business
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
