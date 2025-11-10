@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: loan-business
 spec:
-  replicas: 6
+  replicas: 4
   selector:
     matchLabels:
       app: loan-business
@@ -14,9 +14,31 @@ spec:
     spec:
       containers:
         - name: loan-business
-          image: localhost:5000/loan-business:v1.0.0
+          image: localhost:5000/loan-business:LATEST_IMAGE_TAG
           ports:
             - containerPort: 8080
+          # THÊM CẤU HÌNH REDIS/REDISSON
+          env:
+            # 1. HOST: Tên Service Redis (Cần triển khai Service Redis tên là 'redis-service')
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis-service"
+
+            # 2. PORT: Port Redis mặc định
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+
+            # 3. PASSWORD: Lấy từ Kubernetes Secret
+            # LƯU Ý: Phải có Secret tên là 'redis-secret' chứa key 'password'
+            - name: SPRING_DATA_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: password
+                  optional: true # Đặt là optional nếu Redis không bắt buộc dùng mật khẩu
+
+            # 4. TIMEOUT: Thời gian chờ kết nối (milliseconds)
+            - name: SPRING_DATA_REDIS_TIMEOUT
+              value: "5000"
 ---
 apiVersion: v1
 kind: Service

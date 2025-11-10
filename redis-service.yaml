@@ -1,0 +1,13 @@
+# redis-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service # <--- TÊN SERVICE NÀY SẼ LÀ spring.data.redis.host
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379 # Port Service
+      targetPort: 6379 # Port container
+  type: ClusterIP
