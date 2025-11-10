@@ -17,8 +17,21 @@ spec:
           image: localhost:5000/loan-business:LATEST_IMAGE_TAG
           ports:
             - containerPort: 8080
-          # THÊM CẤU HÌNH REDIS/REDISSON
           env:
+            # === Cấu hình MySQL ===
+            - name: MYSQL_URL
+              value: "jdbc:mysql://mysql-service:3306/loan_business?useSSL=false&allowPublicKeyRetrieval=true"
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret # Lấy từ Kubernetes Secret
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+          # THÊM CẤU HÌNH REDIS/REDISSON
             # 1. HOST: Tên Service Redis (Cần triển khai Service Redis tên là 'redis-service')
             - name: SPRING_DATA_REDIS_HOST
               value: "redis-service"

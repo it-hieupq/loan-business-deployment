@@ -1,0 +1,16 @@
+# mysql-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service # <--- TÊN SERVICE MÀ ỨNG DỤNG JAVA DÙNG ĐỂ KẾT NỐI
+  labels:
+    app: mysql
+spec:
+  # Selector tìm kiếm các Pod có label 'app: mysql' (được tạo bởi mysql-deployment)
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306        # Cổng Service
+      targetPort: 3306  # Cổng container MySQL
+  type: ClusterIP      # Chỉ cho phép truy cập nội bộ Cluster
