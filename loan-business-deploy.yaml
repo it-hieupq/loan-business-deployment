@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: loan-business
-          image: localhost:5000/loan-business:LATEST_IMAGE_TAG
+          image: host.docker.internal:5000/loan-business:52
           ports:
             - containerPort: 8080
           env:
