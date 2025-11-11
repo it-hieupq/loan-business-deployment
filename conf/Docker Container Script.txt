@@ -1,0 +1,29 @@
+*Argocd
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl get pods -n argocd
+
+Lấy password: kubectl get secret argocd-initial-admin-secret -n argocd -o go-template="{{.data.password | base64decode}}"
+
+Expose UI: kubectl port-forward svc/argocd-server -n argocd 8443:443
+
+
+*Jenkins
+
+docker run -d \
+  --name jenkins \
+  -p 8081:8080 \                    # Jenkins UI chạy ở http://localhost:8081
+  -p 50000:50000 \                  # port cho agent (nếu dùng)
+  -v jenkins_home:/var/jenkins_home \  # lưu dữ liệu Jenkins (job, config, plugin)
+  -v /var/run/docker.sock:/var/run/docker.sock \  # cho phép Jenkins build Docker image
+  jenkins/jenkins:latest
+
+docker logs jenkins | find "Password"
+
+docker run -d --user root --name jenkins -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:latest
+docker run -d --user root --name jenkins -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:latest
+
+
+
+
+
